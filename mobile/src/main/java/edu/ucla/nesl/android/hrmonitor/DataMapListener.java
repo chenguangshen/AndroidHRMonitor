@@ -60,7 +60,7 @@ public class DataMapListener implements DataApi.DataListener,
 
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
-        Log.d(TAG, "onDataChanged()");
+        // Log.d(TAG, "onDataChanged()");
         for (DataEvent dataEvent : dataEvents) {
             if (dataEvent.getType() == DataEvent.TYPE_CHANGED) {
                 DataItem dataItem = dataEvent.getDataItem();
@@ -71,7 +71,7 @@ public class DataMapListener implements DataApi.DataListener,
                     unpackSensorData(DataMapItem.fromDataItem(dataItem).getDataMap());
                 }
                 else {
-                    Log.w(TAG, "Unknown data path.");
+                    Log.w(TAG, "Unknown data path: " + path);
                 }
             }
         }
@@ -83,7 +83,8 @@ public class DataMapListener implements DataApi.DataListener,
         Log.d(TAG, "Received HR data, ts=" + timestamp + ", value=" + value);
 
         // Send message to the watch for warning notification
-        if (value >= MAX_HR * 0.9) {
+        if (value >= MAX_HR * 0.45) {
+            Log.i(TAG, "Reach max HR - send warning message back.");
             sendMessageAsync(StringKey.NOTIFICATION, StringKey.WARNING);
         }
     }

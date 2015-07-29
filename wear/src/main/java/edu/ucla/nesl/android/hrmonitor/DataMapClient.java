@@ -41,7 +41,7 @@ public class DataMapClient {
 
     public void sendSensorData(final long timestamp, final float value) {
         // sendSensorDataInBackground(timestamp, value);
-        Log.i(TAG, "In sendSensorData");
+        // Log.i(TAG, "In sendSensorData");
         executorService.submit(new Runnable() {
             @Override
             public void run() {
@@ -71,7 +71,7 @@ public class DataMapClient {
 
     private void send(PutDataRequest putDataRequest) {
         if (validateConnection()) {
-            Log.i(TAG, "Sending PutDataRequest...");
+            // Log.i(TAG, "Sending PutDataRequest...");
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest).setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
                 @Override
                 public void onResult(DataApi.DataItemResult dataItemResult) {
