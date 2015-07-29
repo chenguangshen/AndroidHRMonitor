@@ -7,4 +7,5 @@
     <string name="app_title">HeartRate Monitor</string>
     <string name="start_button">Start</string>
     <string name="stop_button">Stop</string>
+    <string name="local_checkbox">Local</string>
 </resources>

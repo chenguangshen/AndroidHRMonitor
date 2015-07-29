@@ -24,7 +24,6 @@ public class MainActivity extends Activity {
             mService = binder.getService();
             mBound = true;
             Log.i(TAG, "bound to service: " + mService.toString());
-            mService.init();
         }
 
         @Override
@@ -38,6 +37,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
     }
 
     @Override

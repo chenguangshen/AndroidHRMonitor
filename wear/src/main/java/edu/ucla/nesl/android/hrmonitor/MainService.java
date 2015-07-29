@@ -19,12 +19,14 @@ import android.util.Log;
 public class MainService extends Service implements SensorEventListener {
     private static final String TAG = "mobile/MainService";
     private static final int MAX_HR = 200;
-    private static final boolean EXECUTE_LOCAL = true;
 
     private static Sensor mHRSensor = null;
     private static SensorManager mSensorManager = null;
     private static PowerManager.WakeLock mWakeLock = null;
     private static Vibrator mVibrator = null;
+    private static DataMapClient mDataMapClient = null;
+    private static boolean executeLocal = false;
+    private static boolean init = false;
 
     public class LocalBinder extends Binder {
         public MainService getService() {
@@ -36,10 +38,14 @@ public class MainService extends Service implements SensorEventListener {
 
     @Override
     public IBinder onBind(Intent intent) {
+        if (!init) {
+            init = true;
+            init();
+        }
         return mBinder;
     }
 
-    public void init() {
+    private void init() {
         if (mSensorManager == null) {
             mSensorManager = ((SensorManager) getSystemService(SENSOR_SERVICE));
         }
@@ -49,6 +55,9 @@ public class MainService extends Service implements SensorEventListener {
         if (mVibrator == null) {
             mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         }
+        if (mDataMapClient == null) {
+            mDataMapClient = DataMapClient.getInstance(this);
+        }
     }
 
     public void startMonitor() {
@@ -56,15 +65,10 @@ public class MainService extends Service implements SensorEventListener {
 
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "HRMonitor");
-        if (mWakeLock != null) {
-            mWakeLock.acquire();
-        }
-        else {
-            Log.w(TAG, "Wakelock null.");
-        }
+        mWakeLock.acquire();
 
         if (mSensorManager != null) {
-            mSensorManager.registerListener(this, mHRSensor, SensorManager.SENSOR_DELAY_FASTEST);
+            mSensorManager.registerListener(MainService.this, mHRSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
         else {
             Log.w(TAG, "SensorManager null.");
@@ -77,13 +81,13 @@ public class MainService extends Service implements SensorEventListener {
             mWakeLock.release();
         }
         else {
-            Log.w(TAG, "Wakelock null.");
+            Log.i(TAG, "Wakelock null.");
         }
         if (mSensorManager != null) {
-            mSensorManager.unregisterListener(this, mHRSensor);
+            mSensorManager.unregisterListener(MainService.this, mHRSensor);
         }
         else {
-            Log.w(TAG, "SensorManager null.");
+            Log.i(TAG, "SensorManager null.");
         }
     }
 
@@ -96,7 +100,7 @@ public class MainService extends Service implements SensorEventListener {
     public void onSensorChanged(SensorEvent sensorEvent) {
         Log.i(TAG, "New HR reading, value=" + sensorEvent.values[0]);
 
-        if (EXECUTE_LOCAL) {
+        if (executeLocal) {
             // Vibrate to warn the user when HR exceeds 90% of max HR
             if (sensorEvent.values[0] >= MAX_HR * 0.9) {
                 if (mVibrator != null) {
@@ -111,7 +115,8 @@ public class MainService extends Service implements SensorEventListener {
             }
         }
         else {
-            // TODO: send data to phone, get notification back
+            // Send data to phone in order to get notification back
+            mDataMapClient.sendSensorData(sensorEvent.timestamp, sensorEvent.values[0] + ((float) Math.random() * 100.0f));
         }
     }
 

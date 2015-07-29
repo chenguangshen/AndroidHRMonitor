@@ -2,18 +2,34 @@ package edu.ucla.nesl.android.hrmonitor;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
 public class MainActivity extends Activity {
+    private static final String TAG = "Mobile/MainActivity";
+    private DataMapListener mDataMapListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mDataMapListener = new DataMapListener(this);
     }
 
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "In onPause()");
+        mDataMapListener.disconnect();
+    }
+
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "In onResume()");
+        mDataMapListener.connect();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
