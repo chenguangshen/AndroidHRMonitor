@@ -83,7 +83,7 @@ public class DataMapListener implements DataApi.DataListener,
         Log.d(TAG, "Received HR data, ts=" + timestamp + ", value=" + value);
 
         // Send message to the watch for warning notification
-        if (value >= MAX_HR * 0.45) {
+        if (value >= MAX_HR * 0.475) {
             Log.i(TAG, "Reach max HR - send warning message back.");
             sendMessageAsync(StringKey.NOTIFICATION, StringKey.WARNING);
         }

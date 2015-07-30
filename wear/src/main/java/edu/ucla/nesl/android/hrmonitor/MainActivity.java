@@ -12,10 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import edu.ucla.nesl.android.hrmonitor.alarm.HRMonitorAlarmReceiver;
+
 public class MainActivity extends Activity {
-    private static final String TAG = "mobile/MainActivity";
+    private static final String TAG = "Wear/HRMonitorAct";
     private boolean mBound = false;
     private MainService mService;
+    private static final boolean useAlarm = true;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -38,16 +41,22 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        if (useAlarm) {
+            HRMonitorAlarmReceiver alarm = new HRMonitorAlarmReceiver();
+            alarm.setAlarm(this);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "onPause() called.");
-        if (mBound) {
-            unbindService(mServiceConnection);
-            mBound = false;
+
+        if (!useAlarm) {
+            if (mBound) {
+                unbindService(mServiceConnection);
+                mBound = false;
+            }
         }
     }
 
@@ -55,8 +64,11 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume() called.");
-        Intent intent = new Intent(this, MainService.class);
-        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+        if (!useAlarm) {
+            Intent intent = new Intent(this, MainService.class);
+            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        }
     }
 
     @Override

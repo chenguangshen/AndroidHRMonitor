@@ -17,7 +17,7 @@ import android.util.Log;
  * Created by cgshen on 7/25/15.
  */
 public class MainService extends Service implements SensorEventListener {
-    private static final String TAG = "mobile/MainService";
+    private static final String TAG = "Wear/HRMainService";
     private static final int MAX_HR = 200;
 
     private static Sensor mHRSensor = null;
@@ -25,7 +25,7 @@ public class MainService extends Service implements SensorEventListener {
     private static PowerManager.WakeLock mWakeLock = null;
     private static Vibrator mVibrator = null;
     private static DataMapClient mDataMapClient = null;
-    private static boolean executeLocal = false;
+    private static boolean executeLocal = true;
     private static boolean init = false;
 
     public class LocalBinder extends Binder {

@@ -12,7 +12,7 @@ import edu.ucla.nesl.android.hrmonitor.shared.StringKey;
  * Created by cgshen on 7/27/15.
  */
 public class ListenerService extends WearableListenerService {
-    private static final String TAG = "Wear/ListenerService";
+    private static final String TAG = "Wear/HRListenerServ";
     private static Vibrator mVibrator = null;
 
     public void onCreate() {
@@ -24,18 +24,12 @@ public class ListenerService extends WearableListenerService {
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-        Log.i(TAG, "Message received.");
+        // Log.i(TAG, "Message received.");
         if (messageEvent.getPath().equals(StringKey.NOTIFICATION)) {
             String res = new String(messageEvent.getData());
             if (res.equals(StringKey.WARNING)) {
-                Log.i(TAG, "Warning received.");
+                Log.i(TAG, "Warning received - Max HR.");
                 if (mVibrator != null) {
-                    mVibrator.vibrate(100);
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                     mVibrator.vibrate(100);
                 }
             }

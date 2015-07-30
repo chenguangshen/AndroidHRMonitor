@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 import edu.ucla.nesl.android.hrmonitor.shared.StringKey;
 
 public class DataMapClient {
-    private static final String TAG = "Wear/DataMapClient";
+    private static final String TAG = "Wear/HRDataMapClient";
     private static final int CLIENT_CONNECTION_TIMEOUT = 15000;
 
     public static DataMapClient instance;
@@ -56,7 +56,7 @@ public class DataMapClient {
         dataMap.getDataMap().putFloat(StringKey.VALUE, value);
 
         PutDataRequest putDataRequest = dataMap.asPutDataRequest();
-        Log.i(TAG, "value=" + dataMap.getDataMap().getFloat(StringKey.VALUE));
+        // Log.i(TAG, "value=" + dataMap.getDataMap().getFloat(StringKey.VALUE));
         send(putDataRequest);
     }
 
@@ -75,7 +75,7 @@ public class DataMapClient {
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest).setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
                 @Override
                 public void onResult(DataApi.DataItemResult dataItemResult) {
-                    Log.v(TAG, "Sending data message: " + dataItemResult.getStatus().isSuccess());
+                    // Log.v(TAG, "Sending data message: " + dataItemResult.getStatus().isSuccess());
                 }
             });
         }
