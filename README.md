@@ -1,2 +1,2 @@
 # AndroidHRMonitor
-Android Heart Rate Monitor
+Android Heart Rate Monitor using smartwatches.
